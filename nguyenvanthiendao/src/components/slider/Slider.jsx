@@ -33,7 +33,7 @@ const Arrow = styled.div`
 const Wrapper = styled.div`
 	height: 100%;
 	display: flex;
-	transform: translateX(${(props) => props.slideIndex * -100}vw);
+	transform: translateX(${(props) => props.sl * -100}vw);
 	transition: all 1.5s ease;
 `;
 const Slide = styled.div`
@@ -41,7 +41,7 @@ const Slide = styled.div`
 	height: 100vh;
 	display: flex;
 	align-items: center;
-	background-color: #${(props) => props.bg};
+	background-color: #${(props) => props.background};
 `;
 const ImgContainer = styled.div`
 	height: 100%;
@@ -50,7 +50,7 @@ const ImgContainer = styled.div`
 const Image = styled.img`
 	height: 100%;
 `;
-const InforContainer = styled.div`
+const InfoContainer = styled.div`
 	flex: 1;
 	padding: 50px;
 `;
@@ -71,12 +71,12 @@ const Button = styled.button`
 `;
 
 const Slider = () => {
-	const [slideIndex, setSlideIndex] = useState(0);
+	const [slideindex, setSlideIndex] = useState(0);
 	const handleClick = (direction) => {
-		if (direction == "left") {
-			setSlideIndex(slideIndex > 0 ? slideIndex - 1 : 2);
+		if (direction === "left") {
+			setSlideIndex(slideindex > 0 ? slideindex - 1 : 2);
 		} else {
-			setSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0);
+			setSlideIndex(slideindex < 2 ? slideindex + 1 : 0);
 		}
 	};
 
@@ -85,20 +85,19 @@ const Slider = () => {
 			<Arrow direction="left" onClick={() => handleClick("left")}>
 				<ArrowLeftOutlined />
 			</Arrow>
-			<Wrapper slideIndex={slideIndex}>
+			<Wrapper sl={slideindex}>
 				{sliderItems.map((item) => (
-					<Slide bg={item.bg} key={item.id}>
+					<Slide background={item.bg} key={item.id}>
 						<ImgContainer>
 							<Image src={item.img} />
 						</ImgContainer>
-						<InforContainer>
+						<InfoContainer>
 							<Title>{item.title}</Title>
 							<Desc>{item.desc}</Desc>
 							<Button>MUA NGAY</Button>
-						</InforContainer>
+						</InfoContainer>
 					</Slide>
 				))}
-				;
 			</Wrapper>
 			<Arrow direction="right" onClick={() => handleClick("right")}>
 				<ArrowRightOutlined />

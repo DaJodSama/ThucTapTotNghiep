@@ -46,11 +46,11 @@ const SidebarListItem = styled.li`
 	margin-top: 15px;
 	cursor: pointer;
 `;
-const SidebarSocial = styled.li`
+const SidebarSocial = styled.div`
 	display: flex;
     margin-top: 15px;
 `;
-const SocialIcon = styled.li`
+const SocialIcon = styled.div`
 	width: 30px;
 	height: 30px;
 	border-radius: 50%;

@@ -1,7 +1,7 @@
 import React from "react";
 import "./sidebar.css";
 import {
-  AttachMoneyOutlined,
+	AttachMoneyOutlined,
 	BarChartOutlined,
 	ChatBubbleOutlineOutlined,
 	DynamicFeedOutlined,
@@ -12,8 +12,9 @@ import {
 	StorefrontOutlined,
 	TimelineOutlined,
 	TrendingUpOutlined,
-  WorkOutlineOutlined,
+	WorkOutlineOutlined,
 } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export default function Sidebar() {
 	return (
@@ -22,10 +23,12 @@ export default function Sidebar() {
 				<div className="sidebarMenu">
 					<h3 className="sidebarTitle">Dashboard</h3>
 					<ul className="sidebarList">
-						<li className="sidebarListItem active">
-							<LineStyleOutlined className="sidebarIcon" />
-							Home
-						</li>
+						<Link to="/" className="link">
+							<li className="sidebarListItem active">
+								<LineStyleOutlined className="sidebarIcon" />
+								Home
+							</li>
+						</Link>
 						<li className="sidebarListItem">
 							<TimelineOutlined className="sidebarIcon" />
 							Analytics
@@ -39,14 +42,18 @@ export default function Sidebar() {
 				<div className="sidebarMenu">
 					<h3 className="sidebarTitle">Quick Menu</h3>
 					<ul className="sidebarList">
-						<li className="sidebarListItem ">
-							<PermIdentityOutlined className="sidebarIcon" />
-							Users
-						</li>
-						<li className="sidebarListItem">
-							<StorefrontOutlined className="sidebarIcon" />
-							Products
-						</li>
+						<Link to="/users" className="link">
+							<li className="sidebarListItem ">
+								<PermIdentityOutlined className="sidebarIcon" />
+								Users
+							</li>
+						</Link>
+						<Link to="/products" className="link">
+							<li className="sidebarListItem">
+								<StorefrontOutlined className="sidebarIcon" />
+								Products
+							</li>
+						</Link>
 						<li className="sidebarListItem">
 							<AttachMoneyOutlined className="sidebarIcon" />
 							Transactions

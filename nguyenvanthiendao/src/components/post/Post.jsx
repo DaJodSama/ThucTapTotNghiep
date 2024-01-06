@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Posts from "../posts/Posts";
+import Posts from "./Posts";
 
 const Container = styled.div`
 	flex: 9;
@@ -7,13 +7,12 @@ const Container = styled.div`
 	flex-wrap: wrap;
 `;
 
-export default function Post() {
+export default function Post({posts}) {
 	return (
 		<Container>
-            <Posts/>
-            <Posts/>
-            <Posts/>
-            <Posts/>
+			{posts.map((p)=>(
+				<Posts posts={p}/>
+			))}
 		</Container>
 	);
 }

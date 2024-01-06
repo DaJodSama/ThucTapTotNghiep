@@ -50,7 +50,7 @@ const PostDesc = styled.p`
 	-webkit-box-orient: vertical;
 `;
 
-export default function Posts() {
+export default function Posts({post}) {
 	return (
 		<Container>
 			<PostImg src="https://cmsv2.yame.vn/uploads/80d86ba5-88cf-4965-9ebb-b2a5fd6e8652/TDY-1_1500.jpg?quality=80&w=0&h=0"></PostImg>
@@ -59,7 +59,7 @@ export default function Posts() {
 					<PostCat>Spring</PostCat>
 					<PostCat>Autumn</PostCat>
 				</PostCats>
-				<PostTitle>Lorem ipsum, dolor sit amet</PostTitle>
+				<PostTitle>{post.title}</PostTitle>
 				<hr />
 				<PostDate>1 hour ago</PostDate>
 			</PostInfo>

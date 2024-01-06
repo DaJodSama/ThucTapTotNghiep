@@ -7,8 +7,6 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import PostAdd from "./pages/post/PostAdd";
 import PostDetail from "./pages/post/PostDetail";
-import ProductDetail from "./pages/productdetail/ProductDetail";
-import ProductList from "./pages/ProductList";
 import Register from "./pages/register/Register";
 import SettingUser from "./pages/settinguser/SettingUser";
 

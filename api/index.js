@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+var cors = require("cors");
 
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
@@ -11,6 +12,7 @@ const multer = require("multer");
 
 dotenv.config();
 app.use(express.json());
+app.use(cors());
 
 mongoose
 	.connect(process.env.MONGO_URL)
@@ -24,7 +26,7 @@ const storage = multer.diskStorage({
 		cb(null, "images");
 	},
 	filename: (req, file, cb) => {
-		cb(null, req.body.name);
+		cb(null, "hello");
 	},
 });
 

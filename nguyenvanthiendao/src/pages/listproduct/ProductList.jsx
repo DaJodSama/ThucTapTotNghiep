@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import Navbar from "../../components/navbar/Navbar";
 import Annoucement from "../../components/annoucement/Annoucement";
-import Products from "../components/Products";
+
 import Newsletter from "../../components/newsletter/Newsletter";
 import Footer from "../../components/footer/Footer";
 import { mobile } from "../../responsive";
+import Products from "../../components/product/Products";
 
 const Container = styled.div``;
 const Title = styled.h1`
@@ -34,8 +35,6 @@ const Option = styled.option``;
 const ProductList = () => {
 	return (
 		<Container>
-			<Navbar />
-			<Annoucement />
 			<Title>Dresses</Title>
 			<FilterContainer>
 				<Filter>

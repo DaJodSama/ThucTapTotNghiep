@@ -80,7 +80,7 @@ const Right = styled.div`
 	justify-content: center;
 `;
 
-export default function TopBar() {
+export default function Menu() {
 	const user = false;
 	return (
 		<>
@@ -118,11 +118,11 @@ export default function TopBar() {
 								CONTACT
 							</Link>
 						</ListItem>
-						<Link className="link" to="/post">
-							POSTADD
+						<Link className="link" to="/product">
+							PRODUCT
 						</Link>
-						<Link className="link" to="/">
-							PRODUCTDETAIL
+						<Link className="link" to="/post">
+							POST
 						</Link>
 					</List>
 				</Center>

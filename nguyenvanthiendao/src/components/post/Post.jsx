@@ -11,7 +11,7 @@ export default function Post({posts}) {
 	return (
 		<Container>
 			{posts.map((p)=>(
-				<Posts posts={p}/>
+				<Posts post={p}/>
 			))}
 		</Container>
 	);

@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import { mobile } from "../../responsive";
+import { useState } from "react";
+import httpAxios from "./../../httpAxios";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
 	width: 100vw;
@@ -39,33 +42,71 @@ const Input = styled.input`
 const Agreement = styled.span`
 	font-size: 12px;
 	margin: 20px 0px;
+	font-size: 12px;
+	text-decoration: underline;
+	cursor: pointer;
 `;
 const Button = styled.button`
 	width: 40%;
 	border: none;
 	padding: 15px 20px;
+	margin-top: 50px;
 	background-color: teal;
 	color: white;
 	cursor: pointer;
 `;
+const Span = styled.span`
+	color: red;
+	margin: 10px 0 0 10px;
+	${mobile({ marginLeft: "10px", color: "red", fontSize: "14px" })}
+`;
 
 const Register = () => {
+	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [error, setError] = useState(false);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		setError(false);
+		try {
+			const res = await httpAxios.post("/auth/register", {
+				username,
+				email,
+				password,
+			});
+			res.data && window.location.replace("/login");
+		} catch (err) {
+			setError(true);
+		}
+	};
 	return (
 		<Container>
 			<Wrapper>
 				<Title>CREATE ACCOUNT</Title>
-				<Form>
-					<Input placeholder="username" />
-					<Input placeholder="email" />
-					<Input placeholder="password" />
+				<Form onSubmit={handleSubmit}>
+					<Input
+						placeholder="username"
+						onChange={(e) => setUsername(e.target.value)}
+					/>
+					<Input
+						placeholder="email"
+						onChange={(e) => setEmail(e.target.value)}
+					/>
+					<Input
+						type="password"
+						placeholder="password"
+						onChange={(e) => setPassword(e.target.value)}
+					/>
 					<Input placeholder="confirm password" />
 					<Agreement>
-						Bằng việc đăng kí, bạn đã đồng ý với DAJOD. về{" "}
-						<span style={{ color: "red" }}>Điều khoản dịch vụ</span>{" "}
-						&{" "}
-						<span style={{ color: "red" }}>Chính sách bảo mật</span>
+						<Link to="/login" className="link">
+							DO YOU HAVE AN ACCOUNT?
+						</Link>
 					</Agreement>
-					<Button>CREATE</Button>
+					<Button type="submit">CREATE</Button>
+					{error && <Span>Something went wrong!</Span>}
 				</Form>
 			</Wrapper>
 		</Container>

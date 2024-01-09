@@ -85,7 +85,7 @@ const Navbar = () => {
 					</MenuItem>
 					<MenuItem>
 						<Link className="link" to="/register">
-						{!user && "SIGN IN"}
+						{!user && "REGISTER"}
 						</Link>
 					</MenuItem>
 					<MenuItem>

@@ -1,15 +1,13 @@
 import Annoucement from "../annoucement/Annoucement";
 import Navbar from "../navbar/Navbar";
-import TopBar from "../topbar/TopBar";
-
+import Menu from "../menu/Menu";
 
 export default function Header() {
-  return (
-    <div>
-        <Annoucement/>
-        <Navbar/>
-        <TopBar/>
-
-    </div>
-  )
+	return (
+		<div>
+			<Annoucement />
+			<Navbar />
+			<Menu />
+		</div>
+	);
 }

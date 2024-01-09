@@ -8,30 +8,20 @@ import Post from "../../components/post/Post";
 import Sidebar from "../../components/sidebar/Sidebar";
 import styled from "styled-components";
 import httpAxios from "../../httpAxios";
+import { useLocation } from "react-router-dom";
+import ListPosts from './../listposts/ListPosts';
 
 const Container = styled.div`
 	display: flex;
 `;
 const Home = () => {
-	const [posts, setPosts] = useState([]);
-
-	useEffect(() => {
-		const getPost = async () => {
-			const res = await httpAxios.get("/posts");
-			setPosts(res.data);
-		};
-		getPost();
-	}, []);
+	
 	return (
 		<div>
 			<Slider />
 			<Categories />
 			<Products />
-			<Container>
-				<Post posts={posts}/>
-				<Sidebar />
-			</Container>
-
+			<ListPosts/>
 			<Newsletter />
 			<Footer />
 		</div>

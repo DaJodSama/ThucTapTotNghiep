@@ -1,5 +1,8 @@
 import { DeleteOutline, EditOutlined } from "@mui/icons-material";
 import styled from "styled-components";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import httpAxios from "./../../httpAxios";
 
 const Container = styled.div`
 	flex: 9;
@@ -48,20 +51,31 @@ const SinglePostDesc = styled.p`
 	color: #666;
 	font-size: 18px;
 	line-height: 25px;
-    &:first-letter{
-        margin-left: 20px;
-        font-size: 30px;
-        font-weight: 600px;
-    }
+	&:first-letter {
+		margin-left: 20px;
+		font-size: 30px;
+		font-weight: 600px;
+	}
 `;
 
 export default function SinglePost() {
+	const location = useLocation();
+	const path = location.pathname.split("/")[2];
+	const [post, setPost] = useState({});
+
+	useEffect(() => {
+		const getPost = async () => {
+			const res = await httpAxios.get("/posts/" + path);
+			setPost(res.data);
+		};
+		getPost();
+	}, [path]);
 	return (
 		<Container>
 			<SinglePostWrapper>
-				<SinglePostImg src="https://cmsv2.yame.vn/uploads/c03cd098-70b1-427c-b67e-db036c40eae6/Banner_web_02_(1280x1280).jpg?quality=80&w=0&h=0" />
+				{post.photo && <SinglePostImg src={post.photo} />}
 				<SinglePostTitle>
-					Lorem, ipsum dolor sit amet.
+					{post.title}
 					<SinglePostEditContainer>
 						<SinglePostIconEdit>
 							<EditOutlined />
@@ -73,32 +87,16 @@ export default function SinglePost() {
 				</SinglePostTitle>
 				<SinglePostInfo>
 					<SinglePostAuthor>
-						Author: <b>DaJod</b>
+						Author:
+						<Link to={`/?user=${post.username}`} className="link">
+							<b>{post.username}</b>
+						</Link>
 					</SinglePostAuthor>
-					<SinglePostDate>1 hour ago</SinglePostDate>
+					<SinglePostDate>
+						{new Date(post.createdAt).toDateString()}
+					</SinglePostDate>
 				</SinglePostInfo>
-				<SinglePostDesc>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit.
-					Dolore, quaerat nesciunt? Vel quo repellendus corporis eum
-					quia maxime cum ipsam harum provident fuga accusantium
-					aliquid doloribus, error et vero voluptatem. Lorem ipsum
-					dolor sit amet consectetur adipisicing elit. Dolore, quaerat
-					nesciunt? Vel quo repellendus corporis eum quia maxime cum
-					ipsam harum provident fuga accusantium aliquid doloribus,
-					error et vero voluptatem. Lorem ipsum dolor sit amet
-					consectetur adipisicing elit. Dolore, quaerat nesciunt? Vel
-					quo repellendus corporis eum quia maxime cum ipsam harum
-					provident fuga accusantium aliquid doloribus, error et vero
-					voluptatem. Lorem ipsum dolor sit amet consectetur
-					adipisicing elit. Dolore, quaerat nesciunt? Vel quo
-					repellendus corporis eum quia maxime cum ipsam harum
-					provident fuga accusantium aliquid doloribus, error et vero
-					voluptatem. Lorem ipsum dolor sit amet consectetur
-					adipisicing elit. Dolore, quaerat nesciunt? Vel quo
-					repellendus corporis eum quia maxime cum ipsam harum
-					provident fuga accusantium aliquid doloribus, error et vero
-					voluptatem.
-				</SinglePostDesc>
+				<SinglePostDesc>{post.desc}</SinglePostDesc>
 			</SinglePostWrapper>
 		</Container>
 	);

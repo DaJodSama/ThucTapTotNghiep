@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
 	width: 385px;
@@ -50,36 +51,24 @@ const PostDesc = styled.p`
 	-webkit-box-orient: vertical;
 `;
 
-export default function Posts({post}) {
+export default function Posts({ post }) {
 	return (
 		<Container>
-			<PostImg src="https://cmsv2.yame.vn/uploads/80d86ba5-88cf-4965-9ebb-b2a5fd6e8652/TDY-1_1500.jpg?quality=80&w=0&h=0"></PostImg>
+			{post.photo && <PostImg src={post.photo}></PostImg>}
 			<PostInfo>
 				<PostCats>
-					<PostCat>Spring</PostCat>
-					<PostCat>Autumn</PostCat>
+					{post.categories.map((c) => (
+						<PostCat>{c.name}</PostCat>
+					))}
 				</PostCats>
-				<PostTitle>{post.title}</PostTitle>
+				<Link to={`/post/${post._id}`} className="link">
+					<PostTitle>{post.title}</PostTitle>
+				</Link>
+
 				<hr />
-				<PostDate>1 hour ago</PostDate>
+				<PostDate>{new Date(post.createdAt).toDateString()}</PostDate>
 			</PostInfo>
-			<PostDesc>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit.
-				Asperiores, aliquam? Culpa eos iusto porro saepe ipsum autem,
-				corrupti amet tempore quisquam neque fuga illo perspiciatis
-				dolore dolorum sapiente voluptatibus. Fugit?Lorem ipsum dolor
-				sit amet consectetur adipisicing elit. Asperiores, aliquam?
-				Culpa eos iusto porro saepe ipsum autem, corrupti amet tempore
-				quisquam neque fuga illo perspiciatis dolore dolorum sapiente
-				voluptatibus. Fugit?Lorem ipsum dolor sit amet consectetur
-				adipisicing elit. Asperiores, aliquam? Culpa eos iusto porro
-				saepe ipsum autem, corrupti amet tempore quisquam neque fuga
-				illo perspiciatis dolore dolorum sapiente voluptatibus.
-				Fugit?Lorem ipsum dolor sit amet consectetur adipisicing elit.
-				Asperiores, aliquam? Culpa eos iusto porro saepe ipsum autem,
-				corrupti amet tempore quisquam neque fuga illo perspiciatis
-				dolore dolorum sapiente voluptatibus. Fugit?
-			</PostDesc>
+			<PostDesc>{post.desc}</PostDesc>
 		</Container>
 	);
 }

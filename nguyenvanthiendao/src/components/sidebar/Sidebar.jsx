@@ -1,5 +1,8 @@
 import { Facebook, Instagram, Pinterest, Twitter } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import httpAxios from "./../../httpAxios";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
 	flex: 3;
@@ -48,7 +51,7 @@ const SidebarListItem = styled.li`
 `;
 const SidebarSocial = styled.div`
 	display: flex;
-    margin-top: 15px;
+	margin-top: 15px;
 `;
 const SocialIcon = styled.div`
 	width: 30px;
@@ -60,12 +63,34 @@ const SocialIcon = styled.div`
 	justify-content: center;
 	display: flex;
 	margin-right: 10px;
-    cursor: pointer;
+	cursor: pointer;
+`;
+const Button = styled.button`
+width: 120px;
+margin:20px 0;
+	padding: 10px;
+	font-size: 16px;
+	background-color: transparent;
+	cursor: pointer;
 `;
 
 export default function Sidebar() {
+	const [cats, setCats] = useState([]);
+
+	useEffect(() => {
+		const getCats = async () => {
+			const res = await httpAxios.get("/categories");
+			setCats(res.data);
+		};
+		getCats();
+	}, []);
+
 	return (
 		<Container>
+			<Link to="/postadd">
+				<Button> ADD POST</Button>
+			</Link>
+			
 			<SidebarItem>
 				<SidebarTitle>ABOUT ME</SidebarTitle>
 				<SidebarImg src="https://cdn2.yame.vn/pimg/ao-thun-co-tru-the-days-eye-36-0022102/4973c249-12cc-4601-a54a-001a4f47b5c0.jpg?w=540&h=756"></SidebarImg>
@@ -79,10 +104,12 @@ export default function Sidebar() {
 			<SidebarItem>
 				<SidebarTitle>CATEGORIES</SidebarTitle>
 				<SidebarList>
-					<SidebarListItem>Spring</SidebarListItem>
-					<SidebarListItem>Autumn</SidebarListItem>
-					<SidebarListItem>Winter</SidebarListItem>
-					<SidebarListItem>Summer</SidebarListItem>
+					{cats.map((c) => (
+						<Link to={`/?cat=${c.name}`} className="link">
+							{" "}
+							<SidebarListItem>{c.name}</SidebarListItem>
+						</Link>
+					))}
 				</SidebarList>
 			</SidebarItem>
 			<SidebarItem>

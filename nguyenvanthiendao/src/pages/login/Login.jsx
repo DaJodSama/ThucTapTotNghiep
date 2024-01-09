@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import { mobile } from "../../responsive";
+import { Link } from "react-router-dom";
+import { useContext, useRef } from "react";
+import { Context } from "../../context/Context";
+import httpAxios from "../../httpAxios";
 
 const Container = styled.div`
 	width: 100vw;
@@ -49,25 +53,55 @@ const Button = styled.button`
 	color: white;
 	cursor: pointer;
 	margin-bottom: 10px;
+	&:disabled {
+		cursor: not-allowed;
+		background-color: #02adad;
+	}
 `;
 
-const Link = styled.a`
+const Connect = styled.p`
 	margin: 5px 0px;
 	font-size: 12px;
 	text-decoration: underline;
 	cursor: pointer;
 `;
 const Login = () => {
+	const userRef = useRef();
+	const passwordRef = useRef();
+	const { dispatch, isFetching } = useContext(Context);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		dispatch({ type: "LOGIN_START" });
+		try {
+			const res = await httpAxios.post("/auth/login", {
+				username: userRef.current.value,
+				password: passwordRef.current.value,
+			});
+			dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+		} catch (err) {
+			dispatch({ type: "LOGIN_FAILURE" });
+		}
+	};
+
 	return (
 		<Container>
 			<Wrapper>
 				<Title>SIGN IN</Title>
-				<Form>
-					<Input placeholder="Email" />
-					<Input placeholder="Password" />
-					<Button>LOGIN</Button>
-					<Link>QUÊN MẬT KHẨU?</Link>
-					<Link>TẠO TÀI KHOẢN MỚI</Link>
+				<Form onSubmit={handleSubmit}>
+					<Input type="text" placeholder="Username" ref={userRef} />
+					<Input
+						type="password"
+						placeholder="Password"
+						ref={passwordRef}
+					/>
+					<Button type="submit" disabled={isFetching}>
+						LOGIN
+					</Button>
+					<Connect>FORGOT PASSWORD?</Connect>
+					<Link to="/register" className="link">
+						<Connect>REGISTER NOW!</Connect>
+					</Link>
 				</Form>
 			</Wrapper>
 		</Container>

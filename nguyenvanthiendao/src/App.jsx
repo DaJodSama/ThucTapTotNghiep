@@ -12,10 +12,12 @@ import Register from "./pages/register/Register";
 import SettingUser from "./pages/settinguser/SettingUser";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ProductList from './pages/listproduct/ProductList';
+import ProductList from "./pages/listproduct/ProductList";
+import { useContext } from "react";
+import { Context } from "./context/Context";
 
 const App = () => {
-	const user = false;
+	const { user } = useContext(Context);
 	return (
 		<Router>
 			<Header />
@@ -52,6 +54,7 @@ const App = () => {
 					element={user ? <PostAdd /> : <Login />}
 				/>
 				<Route path="/post/:postId" element={<PostDetail />} />
+				<Route path="/cart" element={<Cart />} />
 			</Routes>
 		</Router>
 	);

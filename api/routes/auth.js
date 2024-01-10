@@ -2,6 +2,8 @@ const router = require("express").Router();
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
+//not use crypto
+
 //REGISTER
 router.post("/register", async (req, res) => {
 	try {

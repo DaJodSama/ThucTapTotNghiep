@@ -52,9 +52,10 @@ const PostDesc = styled.p`
 `;
 
 export default function Posts({ post }) {
+	const PF = "http://localhost:5000/images/";
 	return (
 		<Container>
-			{post.photo && <PostImg src={post.photo}></PostImg>}
+			{post.photo && <PostImg src={PF + post.photo}></PostImg>}
 			<PostInfo>
 				<PostCats>
 					{post.categories.map((c) => (

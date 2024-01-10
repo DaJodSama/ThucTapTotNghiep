@@ -1,9 +1,10 @@
 import { Search, ShoppingCartOutlined } from "@mui/icons-material";
 import { Badge } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { mobile } from "../../responsive";
 import { Link } from "react-router-dom";
+import { Context } from "../../context/Context";
 
 const Container = styled.div`
 	height: 60px;
@@ -31,7 +32,9 @@ const Center = styled.div`
 	text-align: center;
 `;
 const MenuItem = styled.div`
-	font-size: 14px;
+	font-size: 18px;
+	font-weight: 400;
+	color: #484848;
 	cursor: pointer;
 	margin-left: 25px;
 	${mobile({ fontSize: "12px", marginLeft: "10px" })}
@@ -63,7 +66,13 @@ const Input = styled.input`
 `;
 
 const Navbar = () => {
-	const user = false;
+	const { user, dispatch } = useContext(Context);
+
+	const handleLogout = () => {
+		dispatch({
+			type: "LOGOUT",
+		});
+	};
 	return (
 		<Container>
 			<Wrapper>
@@ -85,17 +94,17 @@ const Navbar = () => {
 					</MenuItem>
 					<MenuItem>
 						<Link className="link" to="/register">
-						{!user && "REGISTER"}
+							{!user && "REGISTER"}
 						</Link>
 					</MenuItem>
-					<MenuItem>
-						<Link className="link" to="/home">
-							{user && "LOGOUT"}
-						</Link>
+					<MenuItem onClick={handleLogout}>
+						{user && "LOGOUT"}
 					</MenuItem>
 					<MenuItem>
 						<Badge badgeContent={4} color="primary">
-							<ShoppingCartOutlined color="action" />
+							<Link to="/cart">
+								<ShoppingCartOutlined color="action" />
+							</Link>
 						</Badge>
 					</MenuItem>
 				</Right>

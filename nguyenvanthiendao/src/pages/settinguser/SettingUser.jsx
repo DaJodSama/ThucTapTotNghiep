@@ -1,6 +1,9 @@
 import { AccountCircleOutlined } from "@mui/icons-material";
 import styled from "styled-components";
 import Sidebar from "../../components/sidebar/Sidebar";
+import { useContext, useState } from "react";
+import { Context } from "../../context/Context";
+import httpAxios from "../../httpAxios";
 
 const Container = styled.div`
 	display: flex;
@@ -89,8 +92,46 @@ const SettingsSubmitButton = styled.button`
 		background-color: rgb(1, 114, 114);
 	}
 `;
+const InputPP = styled.input``;
 
 export default function SettingUser() {
+	const { user, dispatch } = useContext(Context);
+	const PF = "http://localhost:5000/images/";
+
+	const [file, setFile] = useState(null);
+	const [username, setUsername] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [success, setSuccess] = useState(false);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		dispatch({ type: "UPDATE_START" });
+		const updatedUser = {
+			userId: user._id,
+			username,
+			email,
+			password,
+		};
+		if (file) {
+			const data = new FormData();
+			const filename = Date.now() + file.name;
+			data.append("name", filename);
+			data.append("file", file);
+			updatedUser.profilePic = filename;
+			try {
+				await httpAxios.post("/upload", data);
+			} catch (err) {}
+		}
+		try {
+			const res = await httpAxios.put("/users/" + user._id, updatedUser);
+			setSuccess(true);
+			dispatch({ type: "UPDATE_SUCCESS", payload: res.data });
+		} catch (err) {
+			dispatch({ type: "UPDATE_FAILURE" });
+		}
+	};
+
 	return (
 		<Container>
 			<SettingsWrapper>
@@ -100,34 +141,61 @@ export default function SettingUser() {
 					</SettingsTitleUpdate>
 					<SettingsTitleDelete>Delete Account</SettingsTitleDelete>
 				</SettingsTitle>
-				<SettingsForm>
+				<SettingsForm onSubmit={handleSubmit}>
 					<LabelProfile>Profile Picture</LabelProfile>
 					<SettingsPP>
-						<ImageAccount src="https://cdn2.yame.vn/pimg/ao-thun-co-tron-the-days-eye-32-0022087/ea686910-b4a3-1500-02ea-001a4f34adb6.jpg?w=540&h=756" alt="" />
+						<ImageAccount
+							src={
+								file
+									? URL.createObjectURL(file)
+									: PF + user.profilePic
+							}
+							alt=""
+						/>
 						<LabelInput htmlFor="fileInput">
 							<SettingsIcon>
 								<AccountCircleOutlined />
 							</SettingsIcon>
 						</LabelInput>
+						<InputPP
+							type="file"
+							id="fileInput"
+							style={{ display: "none" }}
+							onChange={(e) => setFile(e.target.files[0])}
+						/>
 						<SettingsPPInput id="fileInput" type="file" />
 					</SettingsPP>
 					<Label>Username</Label>
-					<Input type="text" placeholder="DaJod" name="name" />
+					<Input
+						type="text"
+						placeholder={user.username}
+						onChange={(e) => setUsername(e.target.value)}
+					/>
 					<Label>Email</Label>
 					<Input
 						type="email"
-						placeholder="dajod@gmail.com"
-						name="email"
+						placeholder={user.email}
+						onChange={(e) => setEmail(e.target.value)}
 					/>
 					<Label>Password</Label>
 					<Input
 						type="password"
 						placeholder="Password"
-						name="password"
+						onChange={(e) => setPassword(e.target.value)}
 					/>
 					<SettingsSubmitButton type="submit">
 						Update
 					</SettingsSubmitButton>
+					{success && (
+						<span
+							style={{
+								color: "green",
+								textAlign: "center",
+								marginTop: "20px",
+							}}>
+							Profile has been updated...
+						</span>
+					)}
 				</SettingsForm>
 			</SettingsWrapper>
 			<Sidebar />

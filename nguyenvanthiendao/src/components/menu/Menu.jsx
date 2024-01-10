@@ -2,6 +2,8 @@ import { Facebook, Instagram, Pinterest, Twitter } from "@mui/icons-material";
 import styled from "styled-components";
 import Navbar from "../navbar/Navbar";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Context } from "../../context/Context";
 
 const Container = styled.div`
 	z-index: 999;
@@ -52,25 +54,25 @@ const ListItem = styled.li`
 	color: #484848;
 `;
 const TopList = styled.ul`
-display: flex;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+	display: flex;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
+	list-style: none;
 `;
 const TopListItem = styled.li`
-margin-right: 20px;
-  font-size: 18px;
-  font-weight: 300;
-  cursor: pointer;
+	margin-right: 20px;
+	font-size: 18px;
+	font-weight: 300;
+	cursor: pointer;
 `;
 const TopImg = styled.img`
-width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 15px;
-  cursor: pointer;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-right: 15px;
+	cursor: pointer;
 `;
 
 const Right = styled.div`
@@ -81,7 +83,10 @@ const Right = styled.div`
 `;
 
 export default function Menu() {
-	const user = false;
+	const { user } = useContext(Context);
+
+	const PF = "http://localhost:5000/images/";
+
 	return (
 		<>
 			<Container>
@@ -118,30 +123,31 @@ export default function Menu() {
 								CONTACT
 							</Link>
 						</ListItem>
-						<Link className="link" to="/product">
-							PRODUCT
-						</Link>
-						<Link className="link" to="/post">
-							POST
-						</Link>
+						<ListItem>
+							<Link className="link" to="/product">
+								PRODUCT
+							</Link>
+						</ListItem>
+						<ListItem>
+							<Link className="link" to="/post">
+								POST
+							</Link>
+						</ListItem>
 					</List>
 				</Center>
 				<Right>
-						{user ? (
-							<Link className="link" to="/settinguser">
-								<TopImg
-									src="https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-									alt=""
-								/>
-							</Link>
-						) : (
-							<Link className="link" to="/register">
-								<TopImg
-									src="https://i.pinimg.com/564x/ac/0f/41/ac0f419e977af681516e00829c5393ee.jpg"
-									alt=""
-								/>
-							</Link>
-						)}
+					{user ? (
+						<Link className="link" to="/settinguser">
+							<TopImg src={PF + user.profilePic} alt="" />
+						</Link>
+					) : (
+						<Link className="link" to="/register">
+							<TopImg
+								src="https://i.pinimg.com/564x/ac/0f/41/ac0f419e977af681516e00829c5393ee.jpg"
+								alt=""
+							/>
+						</Link>
+					)}
 				</Right>
 			</Container>
 		</>

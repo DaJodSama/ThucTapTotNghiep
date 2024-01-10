@@ -1,5 +1,8 @@
 import { AddOutlined } from "@mui/icons-material";
+import { useContext, useState } from "react";
 import styled from "styled-components";
+import httpAxios from "./../../httpAxios";
+import { Context } from "./../../context/Context";
 
 const Container = styled.div`
 	padding-top: 50px;
@@ -45,7 +48,7 @@ const TextArea = styled.textarea`
 		outline: none;
 	}
 	font-size: 20px;
-    height: 100vw;
+	height: 100vw;
 `;
 const ButtonSubmit = styled.button`
 	position: absolute;
@@ -56,6 +59,7 @@ const ButtonSubmit = styled.button`
 	padding: 10px;
 	border: none;
 	border-radius: 10px;
+	cursor: pointer;
 `;
 const PostImg = styled.img`
 	width: 70vw;
@@ -66,27 +70,61 @@ const PostImg = styled.img`
 `;
 
 export default function PostAdd() {
+	
+	const [title, setTitle] = useState("");
+	const [desc, setDesc] = useState("");
+	const [file, setFile] = useState(null);
+	const { user } = useContext(Context);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		const newPost = {
+			username: user.username,
+			title,
+			desc,
+		};
+		if (file) {
+			const data = new FormData();
+			const filename = Date.now() + file.name;
+			data.append("name", filename);
+			data.append("file", file);
+			newPost.photo = filename;
+			try {
+				await httpAxios.post("/upload", data);
+			} catch (err) {}
+		}
+		try {
+			const res = await httpAxios.post("/posts", newPost);
+			window.location.replace("/post/" + res.data._id);
+		} catch (err) {}
+	};
 	return (
 		<Container>
-			<PostImg src="https://cmsv2.yame.vn/uploads/8ae9ab2a-c50b-4854-87cb-0ff81b8afbbc/Banner_web_03_(1280x1280).jpg?quality=80&w=0&h=0" />
-			<PostForm>
+			{file && <PostImg src={URL.createObjectURL(file)} />}
+			<PostForm onSubmit={handleSubmit}>
 				<PostFormGroup>
 					<IconAdd htmlFor="fileInput">
 						<AddOutlined />
 					</IconAdd>
-					<InputFile type="file" id="fileInput" />
+					<InputFile
+						type="file"
+						id="fileInput"
+						onChange={(e) => setFile(e.target.files[0])}
+					/>
 					<InputText
 						type="text"
 						placeholder="Title"
 						autoFocus={true}
+						onChange={(e) => setTitle(e.target.value)}
 					/>
 				</PostFormGroup>
 				<PostFormGroup>
 					<TextArea
 						placeholder="Tell your story..."
-						type="text"></TextArea>
+						type="text"
+						onChange={(e) => setDesc(e.target.value)}></TextArea>
 				</PostFormGroup>
-				<ButtonSubmit>Publish</ButtonSubmit>
+				<ButtonSubmit type="submit">Publish</ButtonSubmit>
 			</PostForm>
 		</Container>
 	);

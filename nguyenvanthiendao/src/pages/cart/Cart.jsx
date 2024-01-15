@@ -1,9 +1,14 @@
 import styled from "styled-components";
-import Navbar from "../../components/navbar/Navbar";
-import Annoucement from "../../components/annoucement/Annoucement";
 import Footer from "../../components/footer/Footer";
 import { Add, Remove } from "@mui/icons-material";
 import { mobile } from "../../responsive";
+import Header from "../../components/header/Header";
+import { useSelector } from "react-redux";
+import StripeCheckout from "react-stripe-checkout";
+import { useEffect, useState } from "react";
+import { userRequest } from './../../httpAxios';
+
+const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -127,8 +132,23 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
+	const cart = useSelector((state) => state.cart);
+	const [stripeToken, setStripeToken] = useState(null);
+
+	const onToken = (token) => {
+		setStripeToken(token);
+	};
+	useEffect(()=>{
+		const makeRequest=async ()=>{
+			try{
+				const res=await userRequest("")
+			}catch(err){}
+		}
+	},[stripeToken])
+	console.log(stripeToken);
 	return (
 		<Container>
+			<Header />
 			<Wrapper>
 				<Title>YOUR BAG</Title>
 				<Top>
@@ -141,63 +161,44 @@ const Cart = () => {
 				</Top>
 				<Bottom>
 					<Info>
-						<Product>
-							<ProductDetail>
-								<Image src="https://cdn2.yame.vn/pimg/giay-casual-on-gian-y-nguyen-ban-ver2-0020431/7c439cda-d9cd-1600-8ec2-001972a3ed91.jpg?w=800" />
-								<Details>
-									<ProductName>
-										<b>Product:</b> SNEAKER POWER
-									</ProductName>
-									<ProductID>
-										<b>ID:</b> 9176612222
-									</ProductID>
-									<ProductColor color="black" />
-									<ProductSize>
-										<b>Size:</b> 36.5
-									</ProductSize>
-								</Details>
-							</ProductDetail>
-							<PriceDetail>
-								<ProductAmountContainer>
-									<Add />
-									<ProductAmount>2</ProductAmount>
-									<Remove />
-								</ProductAmountContainer>
-								<ProductPrice>$ 30</ProductPrice>
-							</PriceDetail>
-						</Product>
+						{cart.products.map((product) => (
+							<Product>
+								<ProductDetail>
+									<Image src={product.img} />
+									<Details>
+										<ProductName>
+											<b>Product:</b> {product.title}
+										</ProductName>
+										<ProductID>
+											<b>ID:</b> {product._id}
+										</ProductID>
+										<ProductColor color={product.color} />
+										<ProductSize>
+											<b>Size:</b> {product.size}
+										</ProductSize>
+									</Details>
+								</ProductDetail>
+								<PriceDetail>
+									<ProductAmountContainer>
+										<Add />
+										<ProductAmount>
+											{product.quantity}
+										</ProductAmount>
+										<Remove />
+									</ProductAmountContainer>
+									<ProductPrice>
+										$ {product.price * product.quantity}
+									</ProductPrice>
+								</PriceDetail>
+							</Product>
+						))}
 						<Hr />
-						<Product>
-							<ProductDetail>
-								<Image src="https://cdn2.yame.vn/pimg/pktt-non-y-nguyen-ban-ver13-0021821/e8b6b5de-c01b-4401-1345-0019bac2f9ba.jpg?w=540&h=756" />
-								<Details>
-									<ProductName>
-										<b>Product:</b> HAT SILK
-									</ProductName>
-									<ProductID>
-										<b>ID:</b> 917661124211
-									</ProductID>
-									<ProductColor color="grey" />
-									<ProductSize>
-										<b>Size:</b> M
-									</ProductSize>
-								</Details>
-							</ProductDetail>
-							<PriceDetail>
-								<ProductAmountContainer>
-									<Add />
-									<ProductAmount>1</ProductAmount>
-									<Remove />
-								</ProductAmountContainer>
-								<ProductPrice>$ 10</ProductPrice>
-							</PriceDetail>
-						</Product>
 					</Info>
 					<Summary>
 						<SummaryTitle>ORDER SUMMARY</SummaryTitle>
 						<SummaryItem>
 							<SummaryItemText>Subtotal</SummaryItemText>
-							<SummaryItemPrice>$ 80</SummaryItemPrice>
+							<SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
 						</SummaryItem>
 						<SummaryItem>
 							<SummaryItemText>
@@ -211,9 +212,19 @@ const Cart = () => {
 						</SummaryItem>
 						<SummaryItem type="total">
 							<SummaryItemText>Total</SummaryItemText>
-							<SummaryItemPrice>$ 80</SummaryItemPrice>
+							<SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
 						</SummaryItem>
-						<Button>CHECKOUT NOW</Button>
+						<StripeCheckout
+							name="DaJod Shop"
+							image="https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/362950566_1630927964054521_7084906538356959359_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=0gRMiC6S5pMAX9aU26s&_nc_ht=scontent.fsgn5-5.fna&cb_e2o_trans=t&oh=00_AfAnEtalrPJ42zpfgdT5gj7LflFLMiE8ViP-T7jbx9FeAw&oe=65A94313"
+							billingAddress
+							shippingAddress
+							description={`Your total is $${cart.total}`}
+							amount={cart.total * 100}
+							token={onToken}
+							stripeKey={KEY}>
+							<Button>CHECKOUT NOW</Button>
+						</StripeCheckout>
 					</Summary>
 				</Bottom>
 			</Wrapper>

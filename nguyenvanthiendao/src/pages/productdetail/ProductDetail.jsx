@@ -1,10 +1,14 @@
 import styled from "styled-components";
-import Navbar from "../../components/navbar/Navbar";
-import Annoucement from "../../components/annoucement/Annoucement";
 import Newsletter from "../../components/newsletter/Newsletter";
 import Footer from "../../components/footer/Footer";
 import { Add, Remove } from "@mui/icons-material";
 import { mobile } from "../../responsive";
+import Header from "../../components/header/Header";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import httpAxios from "./../../httpAxios";
+import { addProduct } from "../../redux/cartRedux";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -21,7 +25,7 @@ const Image = styled.img`
 	object-fit: cover;
 	${mobile({ height: "40vh" })}
 `;
-const InforContainer = styled.div`
+const InfoContainer = styled.div`
 	flex: 1;
 	padding: 0px 50px;
 	${mobile({ padding: "10px" })}
@@ -99,52 +103,80 @@ const Button = styled.button`
 	}
 `;
 
-const Product = () => {
+const ProductDetail = () => {
+	const location = useLocation();
+	const id = location.pathname.split("/")[2];
+	const [product, setProduct] = useState({});
+	const [quantity, setQuantity] = useState(1);
+	const [color, setColor] = useState("");
+	const [size, setSize] = useState("");
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		const getProduct = async () => {
+			try {
+				const res = await httpAxios.get("/products/find/" + id);
+				setProduct(res.data);
+			} catch (err) {}
+		};
+		getProduct();
+	}, [id]);
+
+	const handleQuantity = (type) => {
+		if (type === "dec") {
+			quantity > 1 && setQuantity(quantity - 1);
+		} else {
+			setQuantity(quantity + 1);
+		}
+	};
+
+	const handleClick = () => {
+		dispatch(addProduct({ ...product, quantity, color, size }));
+	};
+
 	return (
 		<Container>
-			<Navbar />
-			<Annoucement />
+			<Header />
 			<Wrapper>
 				<ImgContainer>
-					<Image src="https://cdn2.yame.vn/pimg/ao-thun-co-tron-y-nguyen-ban-18-ver93-0021413/355cd475-f9db-4601-4cd3-0019a4c0f804.jpg?w=540&h=756&c=true&ntf=false" />
+					<Image src={product.img} />
 				</ImgContainer>
-				<InforContainer>
-					<Title>Denim Jumpsuit</Title>
-					<Desc>
-						Lorem ipsum dolor sit amet, consectetur adipisicing
-						elit. Commodi excepturi quam quaerat facilis et
-						voluptate sed, officiis vero explicabo dignissimos unde
-						perspiciatis dicta ipsam quibusdam voluptatibus suscipit
-						beatae. Magni, ipsam!
-					</Desc>
-					<Price>$20</Price>
+				<InfoContainer>
+					<Title>{product.title}</Title>
+					<Desc>{product.desc}</Desc>
+					<Price>$ {product.price}</Price>
 					<FilterContainer>
 						<Filter>
 							<FilterTitle>Color</FilterTitle>
-							<FilterColor color="black" />
-							<FilterColor color="blue" />
-							<FilterColor color="grey" />
+							{product.color?.map((c) => (
+								<FilterColor
+									color={c}
+									key={c}
+									onClick={() => setColor(c)}
+								/>
+							))}
 						</Filter>
 						<Filter>
 							<FilterTitle>Size</FilterTitle>
-							<FilterSize>
-								<FilterSizeOption>XS</FilterSizeOption>
-								<FilterSizeOption>S</FilterSizeOption>
-								<FilterSizeOption>M</FilterSizeOption>
-								<FilterSizeOption>L</FilterSizeOption>
-								<FilterSizeOption>XL</FilterSizeOption>
+							<FilterSize
+								onChange={(e) => setSize(e.target.value)}>
+								{product.size?.map((s) => (
+									<FilterSizeOption key={s}>
+										{s}
+									</FilterSizeOption>
+								))}
 							</FilterSize>
 						</Filter>
 					</FilterContainer>
 					<AddContainer>
 						<AmountContainer>
-							<Remove />
-							<Amount>1</Amount>
-							<Add />
+							<Remove onClick={() => handleQuantity("dec")} />
+							<Amount>{quantity}</Amount>
+							<Add onClick={() => handleQuantity("inc")} />
 						</AmountContainer>
-						<Button>ADD TO CART</Button>
+						<Button onClick={handleClick}>ADD TO CART</Button>
 					</AddContainer>
-				</InforContainer>
+				</InfoContainer>
 			</Wrapper>
 			<Newsletter />
 			<Footer />
@@ -152,4 +184,4 @@ const Product = () => {
 	);
 };
 
-export default Product;
+export default ProductDetail;

@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { mobile } from "../../responsive";
 import { Link } from "react-router-dom";
-import { Context } from "../../context/Context";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
 	height: 60px;
@@ -66,20 +66,15 @@ const Input = styled.input`
 `;
 
 const Navbar = () => {
-	const { user, dispatch } = useContext(Context);
+	const quantity = useSelector((state) => state.cart.quantity);
 
-	const handleLogout = () => {
-		dispatch({
-			type: "LOGOUT",
-		});
-	};
 	return (
 		<Container>
 			<Wrapper>
 				<Left>
 					<Language>VN</Language>
 					<SearchContainer>
-						<Input />
+						<Input placeholder="Search" />
 						<Search style={{ color: "gray", fontSize: 16 }} />
 					</SearchContainer>
 				</Left>
@@ -89,24 +84,23 @@ const Navbar = () => {
 				<Right>
 					<MenuItem>
 						<Link className="link" to="/login">
-							{!user && "LOGIN"}
+							LOGIN
 						</Link>
 					</MenuItem>
 					<MenuItem>
 						<Link className="link" to="/register">
-							{!user && "REGISTER"}
+							REGISTER
 						</Link>
 					</MenuItem>
-					<MenuItem onClick={handleLogout}>
-						{user && "LOGOUT"}
-					</MenuItem>
-					<MenuItem>
-						<Badge badgeContent={4} color="primary">
-							<Link to="/cart">
-								<ShoppingCartOutlined color="action" />
-							</Link>
-						</Badge>
-					</MenuItem>
+					<Link to="/cart">
+						<MenuItem>
+							<Badge badgeContent={quantity} color="primary">
+								<Link to="/cart">
+									<ShoppingCartOutlined color="action" />
+								</Link>
+							</Badge>
+						</MenuItem>
+					</Link>
 				</Right>
 			</Wrapper>
 		</Container>

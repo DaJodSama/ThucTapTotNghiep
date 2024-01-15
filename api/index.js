@@ -9,6 +9,9 @@ const userRoute = require("./routes/users");
 const postRoute = require("./routes/posts");
 const categoryRoute = require("./routes/categories");
 const productRoute = require("./routes/products");
+const orderRoute = require("./routes/order");
+const cartRoute = require("./routes/cart");
+const stripeRoute = require("./routes/stripe");
 
 const multer = require("multer");
 const path = require("path");
@@ -44,6 +47,9 @@ app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/products", productRoute);
+app.use("/api/orders", orderRoute);
+app.use("/api/carts", cartRoute);
+app.use("/api/checkout", stripeRoute);
 
 app.listen(process.env.PORT || 5000, () => {
 	console.log("Backend is running.");

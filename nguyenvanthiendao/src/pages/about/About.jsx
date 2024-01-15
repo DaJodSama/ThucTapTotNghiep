@@ -6,6 +6,7 @@ import {
 } from "@mui/icons-material";
 import React from "react";
 import styled from "styled-components";
+import Header from "../../components/header/Header";
 
 const Container = styled.div``;
 const Introduce = styled.div``;
@@ -37,6 +38,7 @@ export const About = () => {
 	return (
 		<>
 			<Container>
+				<Header/>
 				<Introduce>
 					<Title>Giới thiệu</Title>
 

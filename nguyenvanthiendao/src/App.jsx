@@ -1,6 +1,3 @@
-import Header from "./components/header/Header";
-import Post from "./components/post/Post";
-import TopBar from "./components/menu/Menu";
 import About from "./pages/about/About";
 import Cart from "./pages/cart/Cart";
 import Home from "./pages/home/Home";
@@ -15,12 +12,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductList from "./pages/listproduct/ProductList";
 import { useContext } from "react";
 import { Context } from "./context/Context";
+import ProductDetail from "./pages/productdetail/ProductDetail";
 
 const App = () => {
 	const { user } = useContext(Context);
 	return (
 		<Router>
-			<Header />
 			<Routes>
 				<Route exact path="/" element={<Home />} />
 				<Route
@@ -28,23 +25,30 @@ const App = () => {
 					element={user ? <Home /> : <Register />}
 				/>
 				<Route path="/login" element={user ? <Home /> : <Login />} />
+
 				<Route
 					path="/about"
 					element={user ? <About /> : <Register />}
 				/>
 				{/* <Route path="/contact" element={user ? <Contact /> : <Register />} /> */}
+
+				{/* PRODUCT */}
 				<Route
-					path="/about"
-					element={user ? <About /> : <Register />}
-				/>
-				<Route
-					path="/product"
+					path="/products/:category"
 					element={user ? <ProductList /> : <Register />}
 				/>
+				<Route
+					path="/product/:id"
+					element={user ? <ProductDetail /> : <Register />}
+				/>
+
+				{/* USER */}
 				<Route
 					path="/settinguser"
 					element={user ? <SettingUser /> : <Login />}
 				/>
+
+				{/* POST */}
 				<Route
 					path="/post"
 					element={user ? <ListPosts /> : <Login />}
@@ -54,6 +58,8 @@ const App = () => {
 					element={user ? <PostAdd /> : <Login />}
 				/>
 				<Route path="/post/:postId" element={<PostDetail />} />
+
+				{/* CART */}
 				<Route path="/cart" element={<Cart />} />
 			</Routes>
 		</Router>

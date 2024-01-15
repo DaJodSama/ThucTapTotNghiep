@@ -124,7 +124,7 @@ export default function Menu() {
 							</Link>
 						</ListItem>
 						<ListItem>
-							<Link className="link" to="/product">
+							<Link className="link" to="/products">
 								PRODUCT
 							</Link>
 						</ListItem>

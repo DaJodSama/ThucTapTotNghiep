@@ -4,8 +4,9 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 var cors = require("cors");
 
+dotenv.config();
 const authRoute = require("./routes/auth");
-const userRoute = require("./routes/users");
+const userRoute = require("./routes/user");
 const postRoute = require("./routes/posts");
 const categoryRoute = require("./routes/categories");
 const productRoute = require("./routes/products");
@@ -16,7 +17,6 @@ const stripeRoute = require("./routes/stripe");
 const multer = require("multer");
 const path = require("path");
 
-dotenv.config();
 app.use(express.json());
 app.use(cors());
 app.use("/images", express.static(path.join(__dirname, "/images")));
@@ -43,7 +43,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
 });
 
 app.use("/api/auth", authRoute);
-app.use("/api/users", userRoute);
+app.use("/api/user", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/products", productRoute);

@@ -3,10 +3,12 @@ import Footer from "../../components/footer/Footer";
 import { Add, Remove } from "@mui/icons-material";
 import { mobile } from "../../responsive";
 import Header from "../../components/header/Header";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import StripeCheckout from "react-stripe-checkout";
 import { useEffect, useState } from "react";
-import { userRequest } from './../../httpAxios';
+import { userRequest } from "./../../httpAxios";
+import { Link, useNavigate } from "react-router-dom";
+import { clearCart } from "../../redux/cartRedux";
 
 const KEY = process.env.REACT_APP_STRIPE;
 
@@ -130,34 +132,72 @@ const Button = styled.button`
 	color: white;
 	font-weight: 600;
 `;
+const ButtonClear = styled.button`
+	width: 180px;
+	height: 50px;
+	background-color: brown;
+	outline: none;
+	border: 3px solid gray;
+	cursor: pointer;
+	color: white;
+	margin: 10px 15px;
+`;
 
 const Cart = () => {
+	const quantity = useSelector((state) => state.cart.quantity);
 	const cart = useSelector((state) => state.cart);
 	const [stripeToken, setStripeToken] = useState(null);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const onToken = (token) => {
 		setStripeToken(token);
 	};
-	useEffect(()=>{
-		const makeRequest=async ()=>{
-			try{
-				const res=await userRequest("")
-			}catch(err){}
-		}
-	},[stripeToken])
-	console.log(stripeToken);
+
+	useEffect(() => {
+		const makeRequest = async () => {
+			try {
+				const res = await userRequest.post("/checkout/payment", {
+					tokenId: stripeToken.id,
+					amount: 500,
+				});
+				navigate("/success", {
+					state: { stripeData: res.data },
+				});
+			} catch {}
+		};
+		stripeToken && makeRequest();
+	}, [stripeToken, cart.total, navigate]);
+
+	const handleClear = () => {
+		dispatch(clearCart());
+	};
+
 	return (
 		<Container>
 			<Header />
 			<Wrapper>
 				<Title>YOUR BAG</Title>
 				<Top>
-					<TopButton>CONTINUE SHOPPING</TopButton>
+					<Link to="/" className="link">
+						{" "}
+						<TopButton>CONTINUE SHOPPING</TopButton>
+					</Link>
 					<TopTexts>
-						<TopText>Giỏ Hàng(2)</TopText>
+						<TopText>Giỏ Hàng({quantity})</TopText>
 						<TopText>Yêu Thích (0)</TopText>
 					</TopTexts>
-					<TopButton type="filled">CHECKOUT NOW</TopButton>
+					<StripeCheckout
+						name="DaJod Shop"
+						image="https://scontent.fsgn5-5.fna.fbcdn.net/v/t39.30808-6/362950566_1630927964054521_7084906538356959359_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=efb6e6&_nc_ohc=0gRMiC6S5pMAX9aU26s&_nc_ht=scontent.fsgn5-5.fna&cb_e2o_trans=t&oh=00_AfAnEtalrPJ42zpfgdT5gj7LflFLMiE8ViP-T7jbx9FeAw&oe=65A94313"
+						billingAddress
+						shippingAddress
+						description={`Your total is $${cart.total}`}
+						amount={cart.total * 100}
+						token={onToken}
+						stripeKey={KEY}>
+						<TopButton type="filled">CHECKOUT NOW</TopButton>
+					</StripeCheckout>
 				</Top>
 				<Bottom>
 					<Info>
@@ -193,6 +233,13 @@ const Cart = () => {
 							</Product>
 						))}
 						<Hr />
+						{cart.total > 0 ? (
+							<ButtonClear onClick={handleClear}>
+								CLEAR CART
+							</ButtonClear>
+						) : (
+							""
+						)}
 					</Info>
 					<Summary>
 						<SummaryTitle>ORDER SUMMARY</SummaryTitle>

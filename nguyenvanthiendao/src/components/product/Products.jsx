@@ -19,7 +19,7 @@ const Products = ({ cat, filters, sort }) => {
 		const getProducts = async () => {
 			try {
 				const res = await httpAxios.get(
-					cat ? `/products?category=${cat}` : httpAxios + "/products"
+					cat ? `/products?category=${cat}` : "http://localhost:5000/api/products"
 				);
 				setProducts(res.data);
 			} catch (err) {}

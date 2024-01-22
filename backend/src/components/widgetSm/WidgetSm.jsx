@@ -1,76 +1,44 @@
+import { useState } from "react";
 import "./widgetSm.css";
 import { Visibility } from "@mui/icons-material";
+import { useEffect } from "react";
+import { userRequest } from "../../requestMethods";
 
 export default function WidgetSm() {
+	const [users, setUsers] = useState([]);
+
+	useEffect(() => {
+		const getUsers = async () => {
+			try {
+				const res = await userRequest.get("user/?new=true");
+				setUsers(res.data);
+			} catch (err) {}
+		};
+		getUsers();
+	}, []);
+
 	return (
 		<div className="widgetSm">
 			<span className="widgetSmTitle">New Join Members</span>
 			<ul className="widgetSmList">
-				<li className="widgetSmListItem">
-					<img src="https://scontent.fsgn5-6.fna.fbcdn.net/v/t39.30808-6/278969725_1329745880839399_342244072244274198_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=9c7eae&_nc_eui2=AeGr-r59JXXqgmAEMOLJCSJNdQ_dy1KCH4N1D93LUoIfgzP-WGSgwV90TIhtPl2kJC7wsAU5fKiSe6mXN8Ant7ui&_nc_ohc=nk8f5_xTh-cAX-DPVLj&_nc_ht=scontent.fsgn5-6.fna&cb_e2o_trans=t&oh=00_AfADtuMcQ65lC1aQ4yhPuJP3hofqFyfe_ad8MggupKtjiw&oe=659C277E" alt="" className="widgetSmImg" />
+				{users.map(user=>(
+				<li className="widgetSmListItem" key={user._id}>
+					<img
+						src={
+							user.img ||
+							"https://i.pinimg.com/564x/ea/76/c3/ea76c343f9bbd6917e9a094b9317ab9e.jpg"
+						}
+						alt=""
+						className="widgetSmImg"
+					/>
 					<div className="widgetSmUser">
-						<span className="widgetSmUsername">DaJod Sama</span>
-						<span className="widgetSmUserTitle">
-							Software Engineer
-						</span>
+						<span className="widgetSmUsername">{user.username}</span>
 					</div>
 					<button className="widgetSmButton">
-						<Visibility className="widgetSmIcon"/>
+						<Visibility className="widgetSmIcon" />
 						Display
 					</button>
-				</li>
-				<li className="widgetSmListItem">
-					<img src="https://scontent.fsgn5-6.fna.fbcdn.net/v/t39.30808-6/278969725_1329745880839399_342244072244274198_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=9c7eae&_nc_eui2=AeGr-r59JXXqgmAEMOLJCSJNdQ_dy1KCH4N1D93LUoIfgzP-WGSgwV90TIhtPl2kJC7wsAU5fKiSe6mXN8Ant7ui&_nc_ohc=nk8f5_xTh-cAX-DPVLj&_nc_ht=scontent.fsgn5-6.fna&cb_e2o_trans=t&oh=00_AfADtuMcQ65lC1aQ4yhPuJP3hofqFyfe_ad8MggupKtjiw&oe=659C277E" alt="" className="widgetSmImg" />
-					<div className="widgetSmUser">
-						<span className="widgetSmUsername">DaJod Sama</span>
-						<span className="widgetSmUserTitle">
-							Software Engineer
-						</span>
-					</div>
-					<button className="widgetSmButton">
-						<Visibility className="widgetSmIcon"/>
-						Display
-					</button>
-				</li>
-				<li className="widgetSmListItem">
-					<img src="https://scontent.fsgn5-6.fna.fbcdn.net/v/t39.30808-6/278969725_1329745880839399_342244072244274198_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=9c7eae&_nc_eui2=AeGr-r59JXXqgmAEMOLJCSJNdQ_dy1KCH4N1D93LUoIfgzP-WGSgwV90TIhtPl2kJC7wsAU5fKiSe6mXN8Ant7ui&_nc_ohc=nk8f5_xTh-cAX-DPVLj&_nc_ht=scontent.fsgn5-6.fna&cb_e2o_trans=t&oh=00_AfADtuMcQ65lC1aQ4yhPuJP3hofqFyfe_ad8MggupKtjiw&oe=659C277E" alt="" className="widgetSmImg" />
-					<div className="widgetSmUser">
-						<span className="widgetSmUsername">DaJod Sama</span>
-						<span className="widgetSmUserTitle">
-							Software Engineer
-						</span>
-					</div>
-					<button className="widgetSmButton">
-						<Visibility className="widgetSmIcon"/>
-						Display
-					</button>
-				</li>
-				<li className="widgetSmListItem">
-					<img src="https://scontent.fsgn5-6.fna.fbcdn.net/v/t39.30808-6/278969725_1329745880839399_342244072244274198_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=9c7eae&_nc_eui2=AeGr-r59JXXqgmAEMOLJCSJNdQ_dy1KCH4N1D93LUoIfgzP-WGSgwV90TIhtPl2kJC7wsAU5fKiSe6mXN8Ant7ui&_nc_ohc=nk8f5_xTh-cAX-DPVLj&_nc_ht=scontent.fsgn5-6.fna&cb_e2o_trans=t&oh=00_AfADtuMcQ65lC1aQ4yhPuJP3hofqFyfe_ad8MggupKtjiw&oe=659C277E" alt="" className="widgetSmImg" />
-					<div className="widgetSmUser">
-						<span className="widgetSmUsername">DaJod Sama</span>
-						<span className="widgetSmUserTitle">
-							Software Engineer
-						</span>
-					</div>
-					<button className="widgetSmButton">
-						<Visibility className="widgetSmIcon"/>
-						Display
-					</button>
-				</li>
-				<li className="widgetSmListItem">
-					<img src="https://scontent.fsgn5-6.fna.fbcdn.net/v/t39.30808-6/278969725_1329745880839399_342244072244274198_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=9c7eae&_nc_eui2=AeGr-r59JXXqgmAEMOLJCSJNdQ_dy1KCH4N1D93LUoIfgzP-WGSgwV90TIhtPl2kJC7wsAU5fKiSe6mXN8Ant7ui&_nc_ohc=nk8f5_xTh-cAX-DPVLj&_nc_ht=scontent.fsgn5-6.fna&cb_e2o_trans=t&oh=00_AfADtuMcQ65lC1aQ4yhPuJP3hofqFyfe_ad8MggupKtjiw&oe=659C277E" alt="" className="widgetSmImg" />
-					<div className="widgetSmUser">
-						<span className="widgetSmUsername">DaJod Sama</span>
-						<span className="widgetSmUserTitle">
-							Software Engineer
-						</span>
-					</div>
-					<button className="widgetSmButton">
-						<Visibility className="widgetSmIcon"/>
-						Display
-					</button>
-				</li>
+				</li>))}
 			</ul>
 		</div>
 	);

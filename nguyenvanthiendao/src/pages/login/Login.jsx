@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { mobile } from "../../responsive";
-import { Link } from "react-router-dom";
-import { useContext, useRef } from "react";
-import { Context } from "../../context/Context";
-import httpAxios from "../../httpAxios";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "./../../redux/apiCalls";
 
 const Container = styled.div`
 	width: 100vw;
@@ -55,52 +55,52 @@ const Button = styled.button`
 	margin-bottom: 10px;
 	&:disabled {
 		cursor: not-allowed;
-		background-color: #02adad;
+		background-color: green;
 	}
 `;
 
-const Connect = styled.p`
-	margin: 5px 0px;
-	font-size: 12px;
-	text-decoration: underline;
-	cursor: pointer;
+const Error = styled.span`
+	color: red;
 `;
 const Login = () => {
-	const userRef = useRef();
-	const passwordRef = useRef();
-	const { dispatch, isFetching } = useContext(Context);
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const dispatch = useDispatch();
+	const { isFetching, error } = useSelector((state) => state.user);
+	// const navigate = useNavigate();
 
-	const handleSubmit = async (e) => {
+	const handleClick = (e) => {
 		e.preventDefault();
-		dispatch({ type: "LOGIN_START" });
-		try {
-			const res = await httpAxios.post("/auth/login", {
-				username: userRef.current.value,
-				password: passwordRef.current.value,
-			});
-			dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
-		} catch (err) {
-			dispatch({ type: "LOGIN_FAILURE" });
-		}
+		login(dispatch, { username, password });
 	};
 
 	return (
 		<Container>
 			<Wrapper>
 				<Title>SIGN IN</Title>
-				<Form onSubmit={handleSubmit}>
-					<Input type="text" placeholder="Username" ref={userRef} />
+				<Form>
 					<Input
-						type="password"
-						placeholder="Password"
-						ref={passwordRef}
+						placeholder="username"
+						onChange={(e) => setUsername(e.target.value)}
 					/>
-					<Button type="submit" disabled={isFetching}>
-						LOGIN
-					</Button>
-					<Connect>FORGOT PASSWORD?</Connect>
+					<Input
+						placeholder="password"
+						type="password"
+						autoComplete="on"
+						onChange={(e) => setPassword(e.target.value)}
+					/>
+					<Link to="/login" className="link">
+						<Button onClick={handleClick} disabled={isFetching}>
+							LOGIN
+						</Button>
+					</Link>
+
+					{error && <Error>Something went wrong...</Error>}
+					<Link className="link">
+						DO NOT YOU REMEMBER THE PASSWORD?
+					</Link>
 					<Link to="/register" className="link">
-						<Connect>REGISTER NOW!</Connect>
+						CREATE A NEW ACCOUNT
 					</Link>
 				</Form>
 			</Wrapper>

@@ -4,7 +4,10 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import { mobile } from "../../responsive";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCart } from "../../redux/cartRedux";
+import { logoutUser } from "../../redux/userRedux";
+import SearchParams from "../searchParams/SearchParams";
 
 const Container = styled.div`
 	height: 60px;
@@ -68,36 +71,48 @@ const Input = styled.input`
 const Navbar = () => {
 	const quantity = useSelector((state) => state.cart.quantity);
 
+	const user = useSelector((state) => state.user.currentUser);
+	const dispatch = useDispatch();
+	const handleDelete = (e) => {
+		e.preventDefault();
+		dispatch(logoutUser());
+		dispatch(clearCart());
+	};
+	const handleClear = () => {
+		dispatch(clearCart());
+	};
+
 	return (
 		<Container>
 			<Wrapper>
 				<Left>
 					<Language>VN</Language>
 					<SearchContainer>
-						<Input placeholder="Search" />
-						<Search style={{ color: "gray", fontSize: 16 }} />
+						<SearchParams />
 					</SearchContainer>
 				</Left>
 				<Center>
 					<Logo>DAJOD.</Logo>
 				</Center>
 				<Right>
-					<MenuItem>
-						<Link className="link" to="/login">
-							LOGIN
+					{user ? (
+						<MenuItem>HELLO {user.username}</MenuItem>
+					) : (
+						<Link to="/register">
+							<MenuItem>REGISTER</MenuItem>
 						</Link>
-					</MenuItem>
-					<MenuItem>
-						<Link className="link" to="/register">
-							REGISTER
+					)}
+					{user ? (
+						<MenuItem onClick={handleDelete}>LOG OUT</MenuItem>
+					) : (
+						<Link to="/Login">
+							<MenuItem onClick={handleClear}>LOGIN</MenuItem>
 						</Link>
-					</MenuItem>
+					)}
 					<Link to="/cart">
 						<MenuItem>
 							<Badge badgeContent={quantity} color="primary">
-								<Link to="/cart">
-									<ShoppingCartOutlined color="action" />
-								</Link>
+								<ShoppingCartOutlined color="action" />
 							</Badge>
 						</MenuItem>
 					</Link>

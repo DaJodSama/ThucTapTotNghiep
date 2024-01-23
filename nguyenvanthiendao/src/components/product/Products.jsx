@@ -32,7 +32,7 @@ const Products = ({ cat, filters, sort }) => {
 			setFilteredProducts(
 				products.filter((item) => {
 					return Object.entries(filters).every(([key, value]) => {
-						return item[key] === value;
+						return item[key].includes(value);
 					});
 				})
 			);

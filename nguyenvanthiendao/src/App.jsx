@@ -18,6 +18,7 @@ import ProductList from "./pages/listproduct/ProductList";
 import ProductDetail from "./pages/productdetail/ProductDetail";
 import Success from "./pages/success/Success";
 import { useSelector } from "react-redux";
+import AllProduct from "./pages/product/AllProduct";
 
 const App = () => {
 	const user = useSelector((state) => state.user.currentUser);
@@ -35,7 +36,7 @@ const App = () => {
 				{/* <Route path="/contact" element={user ? <Contact /> : <Register />} /> */}
 
 				{/* PRODUCT */}
-				<Route path="/products" element={<ProductList />} />
+				<Route path="/products" element={<AllProduct />} />
 				<Route path="/products/:category" element={<ProductList />} />
 				<Route path="/product/:id" element={<ProductDetail />} />
 

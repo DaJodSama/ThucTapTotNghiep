@@ -98,14 +98,14 @@ const Navbar = () => {
 					{user ? (
 						<MenuItem>HELLO {user.username}</MenuItem>
 					) : (
-						<Link to="/register">
+						<Link to="/register" className="link">
 							<MenuItem>REGISTER</MenuItem>
 						</Link>
 					)}
 					{user ? (
 						<MenuItem onClick={handleDelete}>LOG OUT</MenuItem>
 					) : (
-						<Link to="/Login">
+						<Link to="/Login" className="link">
 							<MenuItem onClick={handleClear}>LOGIN</MenuItem>
 						</Link>
 					)}

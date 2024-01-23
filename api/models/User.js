@@ -9,7 +9,9 @@ const UserSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
-		img: { type: String },
+		address: { type: String },
+		phoneNumber: { type: Number },
+		fullName: { type: String },
 	},
 	{ timestamps: true }
 );
